@@ -5,6 +5,7 @@ public abstract class Automovel {
 	protected int capacidadePessoas;
 	protected double valorBaseLocacao;
 	protected int ano;
+	protected String porteVeiculo;
 
 	public Automovel() {
 	}
@@ -47,7 +48,7 @@ public abstract class Automovel {
 	}
 
 	public double getValorBaseLocacao() {
-		return valorBaseLocacao;
+		return 100.00;
 	}
 
 	public void setValorBaseLocacao(double valorBaseLocacao) {
@@ -61,8 +62,6 @@ public abstract class Automovel {
 	public void setAno(int ano) {
 		this.ano = ano;
 	}
-
-	abstract double valorBaseAutovel();
 
 	@Override
 	public String toString() {

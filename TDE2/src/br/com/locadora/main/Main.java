@@ -4,17 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.sun.corba.se.spi.copyobject.CopierManager;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.REUtil;
+
+import br.com.locadora.classes.Automovel;
 import br.com.locadora.classes.Carro;
+import br.com.locadora.classes.ComprovanteLocacao;
 import br.com.locadora.classes.Moto;
 import br.com.locadora.classes.Onibus;
 import br.com.locadora.utils.IniciaLista;
 
 public class Main {
-	public static Scanner entrada; 
+	public static Scanner entrada;
+	ComprovanteLocacao cl = new ComprovanteLocacao();
 
 	public static void main(String[] args) {
 		entrada = new Scanner(System.in);
+		IniciaLista i = new IniciaLista();
 		int op;
+
 		do {
 			menuDeOpcoes();
 			op = entrada.nextInt();
@@ -25,15 +34,18 @@ public class Main {
 				break;
 			case 2:
 				System.out.println("2-Pesquisar Automovel");
+				pesquisarAutomovel();
 				break;
 			case 3:
 				System.out.println("3-Devolver Automovel");
 				break;
 			case 4:
 				System.out.println("4- listar Automoveis");
-				IniciaLista.listaAutomoveisPadrao();
+				i.listarAutomoveisCadastrados();
 				break;
 			case 5:
+				System.out.println("5- Devolver Automovel");
+				realizarDevolucao();
 				break;
 			case 0:
 				System.out.println(" - FIM - ");
@@ -43,6 +55,85 @@ public class Main {
 				break;
 			}
 		} while (op != 0);
+
+	}
+
+	private static void realizarDevolucao() {
+		System.out.println("Informe a data da devolução do automvel");
+		entrada.nextLine();
+
+	}
+
+	private static void pesquisarAutomovel() {
+
+		IniciaLista i = new IniciaLista();
+		List<Automovel> automoveiDisponiveis = new ArrayList<Automovel>();
+		ComprovanteLocacao comprovante = new ComprovanteLocacao();
+		ClassificadoDiaria classificador = new ClassificadoDiaria();
+
+		boolean placaEncontrada = false;
+
+		System.out.println("Informe um valor que pretende pagar: ");
+		double valor = entrada.nextDouble();
+
+		automoveiDisponiveis = i.pesquisaPorValor(valor);
+
+		if (automoveiDisponiveis.isEmpty()) {
+			System.out.println("Não exitem automoveis com o valor de :R$ " + valor + " ou menor");
+		} else {
+
+			for (Automovel automovel : automoveiDisponiveis) {
+				System.out.println("________________________");
+				System.out.println();
+				System.out.println("Placa :" + automovel.getPlaca());
+				System.out.println("Ano : " + automovel.getAno());
+				System.out.println("Capacidade Pessoas :" + automovel.getCapacidadePessoas());
+				System.out.println("Valor base locação : " + automovel.getValorBaseLocacao());
+				System.out.println();
+
+			}
+
+			do {
+				Scanner entrada = new Scanner(System.in);
+				System.out.println("Escolha um automovel digitando a placa :");
+				String escolhido = entrada.nextLine().toUpperCase();
+
+				for (Automovel automovel : automoveiDisponiveis) {
+					if (automovel.getPlaca().equals(escolhido.toUpperCase())) {
+						comprovante.setAutomovel(automovel);
+						break;
+					}
+				}
+
+				if (comprovante.getAutomovel() == null) {
+					placaEncontrada = false;
+					System.out.println("Placa informada não existe");
+					System.out.print("Digite uma placa valida");
+					escolhido = entrada.nextLine();
+				}
+
+				placaEncontrada = true;
+			} while (comprovante.getAutomovel() == null);
+
+			System.out.println("Automovel selecionado : " + comprovante.getAutomovel().getPlaca());
+
+			System.out.println("Informe o numero de dias de locação: ");
+			comprovante.setDias(entrada.nextInt());
+
+			System.out.println("A data de retirada: (DDMMMYYY) ");
+			comprovante.setDataLocacao(entrada.nextLine());
+
+			System.out.println("");
+			comprovante.setValor(classificador.calcular(comprovante.getAutomovel(), comprovante.getDias()));
+
+			System.out.println("Valor total da locação é de R$: " + comprovante.getValor() + " para o total de "
+					+ comprovante.getDias() + " dias ");
+
+			comprovante.toString();
+
+			System.out.println(" - Reserva efetuada com sucesso -  ");
+
+		}
 
 	}
 
@@ -59,10 +150,13 @@ public class Main {
 	private static void cadastrorAutomovelSelecionado(int e) {
 		if (e == 1) {
 			cadastarCarro();
+			return;
 		} else if (e == 2) {
 			cadastarMoto();
+			return;
 		}
 		cadastarOnibus();
+		return;
 	}
 
 	private static void cadastarOnibus() {
@@ -71,7 +165,7 @@ public class Main {
 		Onibus o = new Onibus();
 
 		System.out.print("Numero Placa: ");
-		o.setPlaca(entrada.nextLine());
+		o.setPlaca(entrada.nextLine().toUpperCase());
 		System.out.print("Numero de pessoas: ");
 		o.setCapacidadePessoas(Integer.parseInt(entrada.nextLine()));
 		System.out.print("Ano de fabricação: ");
@@ -81,11 +175,11 @@ public class Main {
 		System.out.print("Numero de banheiros: ");
 		o.setNumeroDeBanheiros(Integer.parseInt(entrada.nextLine()));
 		System.out.print("Numero de passageiros: ");
-		o.setNumeroDePassageiros(Integer.parseInt(entrada.nextLine()));
+		o.setCapacidadePessoas(Integer.parseInt(entrada.nextLine()));
 
-		onibus.add(o);
-		IniciaLista.listarTodosAutomoveis(onibus);
-		System.out.println(" - Moto cadastrada com sucesso! -");
+		IniciaLista.listarOnibus(o);
+
+		System.out.println(" - Onibus cadastrado com sucesso! -");
 	}
 
 	private static void cadastarMoto() {
@@ -94,18 +188,20 @@ public class Main {
 		Moto moto = new Moto();
 
 		System.out.print("Numero Placa: ");
-		moto.setPlaca(entrada.nextLine());
+		moto.setPlaca(entrada.nextLine().toUpperCase());
 		System.out.print("Ano de fabricação: ");
 		moto.setAno(Integer.parseInt(entrada.nextLine()));
 		System.out.print("Numero de pessoas: ");
 		moto.setCapacidadePessoas(Integer.parseInt(entrada.nextLine()));
-		System.out.print("Contem Tração 4 rodas:  0 - Não | 1 - Sim  ");
-		moto.setPartidaEltrica(setaBoolean(Integer.parseInt(entrada.nextLine())));
+		System.out.print("Potencia: ");
+		moto.setPotencia((Integer.parseInt(entrada.nextLine())));
 		System.out.print("Informe o modelo: ");
 		moto.setModelo(entrada.nextLine());
+		moto.setValorBaseLocacao(moto.getValorBaseLocacao());
+		System.out.println();
 
-		motos.add(moto);
-		IniciaLista.listarTodosAutomoveis(moto);
+		IniciaLista.listarMotos(moto);
+
 		System.out.println(" - Moto cadastrada com sucesso! -");
 	}
 
@@ -114,7 +210,7 @@ public class Main {
 		Scanner entrada = new Scanner(System.in);
 		Carro carro = new Carro();
 		System.out.print("Numero Placa: ");
-		carro.setPlaca(entrada.nextLine());
+		carro.setPlaca(entrada.nextLine().toUpperCase());
 		System.out.print("Numero de pessoas: ");
 		carro.setCapacidadePessoas(Integer.parseInt(entrada.nextLine()));
 		System.out.print("Ano de fabricação: ");
@@ -129,8 +225,8 @@ public class Main {
 		System.out.print("Contem direção Hidraulica:  0 - Não | 1 - Sim  ");
 		carro.setDirecaoHidraulica(setaBoolean(Integer.parseInt(entrada.nextLine())));
 
-		carros.add(carro);
-		IniciaLista.listarTodosAutomoveis(carro);
+		IniciaLista.listarCarro(carro);
+
 		System.out.println(" - Carro cadastrado com sucesso! -");
 	}
 
@@ -155,6 +251,9 @@ public class Main {
 		return false;
 	}
 
+	/*
+	 * Metodo que mostra o menu para cadastro de veiculos para usuario
+	 */
 	private static void mostraOpcoesDeVeiculos() {
 		System.out.println();
 		System.out.println(" 1-Carro  |");
@@ -163,11 +262,16 @@ public class Main {
 		System.out.println();
 	}
 
+	/*
+	 * Metodo que mostra o menu para o usuario
+	 */
 	public static void menuDeOpcoes() {
 		System.out.println("_________________________");
 		System.out.println("1-Cadastrar Automovel    |");
 		System.out.println("2-Pesquisar Automovel    |");
 		System.out.println("3-Devolver Automovel     |");
+		System.out.println("4-Listar Automoveis      |");
+		System.out.println("5-Devolver Automovel     |");
 		System.out.println("0- Sair                  |");
 		System.out.println("_________________________|");
 	}

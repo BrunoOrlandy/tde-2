@@ -6,7 +6,19 @@ public class Carro extends Automovel {
 	private boolean tracaoQuatroRodas;
 	private boolean direcaoHidraulica;
 
-	public String darMarchaRé() {
+	public Carro() {
+		super();
+	}
+
+	public Carro(int numeroPortas, boolean contemRadio, boolean tracaoQuatroRodas, boolean direcaoHidraulica) {
+		super();
+		this.numeroPortas = numeroPortas;
+		this.contemRadio = contemRadio;
+		this.tracaoQuatroRodas = tracaoQuatroRodas;
+		this.direcaoHidraulica = direcaoHidraulica;
+	}
+
+	public String darMarchaRe() {
 		return "Marcha R engatada";
 	}
 
@@ -42,9 +54,17 @@ public class Carro extends Automovel {
 		this.direcaoHidraulica = direcaoHidraulica;
 	}
 
-	@Override
 	double valorBaseAutovel() {
-		return 20.00;
+
+		return getValorBaseLocacao() + 100.00;
+	}
+
+	@Override
+	public String toString() {
+		return "Carro [numeroPortas=" + numeroPortas + ", contemRadio=" + contemRadio + ", tracaoQuatroRodas="
+				+ tracaoQuatroRodas + ", direcaoHidraulica=" + direcaoHidraulica + ", placa=" + placa
+				+ ", capacidadePessoas=" + capacidadePessoas + ", valorBaseLocacao=" + valorBaseLocacao + ", ano=" + ano
+				+ ", porteVeiculo=" + porteVeiculo + "]";
 	}
 
 }

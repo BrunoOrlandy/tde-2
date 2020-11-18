@@ -2,8 +2,17 @@ package br.com.locadora.classes;
 
 public class Onibus extends Automovel {
 	private int numeroDePortas;
-	private int numeroDePassageiros;
 	private int numeroDeBanheiros;
+
+	public Onibus() {
+		super();
+	}
+
+	public Onibus(int numeroDePortas, int numeroDeBanheiros) {
+		super();
+		this.numeroDePortas = numeroDePortas;
+		this.numeroDeBanheiros = numeroDeBanheiros;
+	}
 
 	public int getNumeroDePortas() {
 		return numeroDePortas;
@@ -11,14 +20,6 @@ public class Onibus extends Automovel {
 
 	public void setNumeroDePortas(int numeroDePortas) {
 		this.numeroDePortas = numeroDePortas;
-	}
-
-	public int getNumeroDePassageiros() {
-		return numeroDePassageiros;
-	}
-
-	public void setNumeroDePassageiros(int numeroDePassageiros) {
-		this.numeroDePassageiros = numeroDePassageiros;
 	}
 
 	public int getNumeroDeBanheiros() {
@@ -29,9 +30,15 @@ public class Onibus extends Automovel {
 		this.numeroDeBanheiros = numeroDeBanheiros;
 	}
 
-	@Override
 	double valorBaseAutovel() {
-		return 50.00;
+		return getValorBaseLocacao() + 400.00;
+	}
+
+	@Override
+	public String toString() {
+		return "Onibus [numeroDePortas=" + numeroDePortas + ", numeroDeBanheiros=" + numeroDeBanheiros + ", placa="
+				+ placa + ", capacidadePessoas=" + capacidadePessoas + ", valorBaseLocacao=" + valorBaseLocacao
+				+ ", ano=" + ano + ", porteVeiculo=" + porteVeiculo + "]";
 	}
 
 }

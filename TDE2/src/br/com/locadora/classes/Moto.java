@@ -1,31 +1,25 @@
 package br.com.locadora.classes;
 
 public class Moto extends Automovel {
-	public boolean partidaEltrica;
-	public String modelo;
+	private int potencia;
+	private String modelo;
 
 	public Moto() {
-	}
-
-	public Moto(boolean partidaEltrica, String modelo) {
 		super();
-		this.partidaEltrica = partidaEltrica;
+	}
+
+	public Moto(int potencia, String modelo) {
+		super();
+		this.potencia = potencia;
 		this.modelo = modelo;
 	}
 
-	public Moto(boolean partidaEltrica, String modelo, String placa, int capacidadePessoas, double valorBaseLocacao,
-			int ano) {
-		super(placa, capacidadePessoas, valorBaseLocacao, ano);
-		this.partidaEltrica = partidaEltrica;
-		this.modelo = modelo;
+	public int getPotencia() {
+		return potencia;
 	}
 
-	public boolean isPartidaEltrica() {
-		return partidaEltrica;
-	}
-
-	public void setPartidaEltrica(boolean partidaEltrica) {
-		this.partidaEltrica = partidaEltrica;
+	public void setPotencia(int potencia) {
+		this.potencia = potencia;
 	}
 
 	public String getModelo() {
@@ -36,10 +30,15 @@ public class Moto extends Automovel {
 		this.modelo = modelo;
 	}
 
-	@Override
 	double valorBaseAutovel() {
+		return getValorBaseLocacao() + 50.00;
+	}
 
-		return 15.00;
+	@Override
+	public String toString() {
+		return "Moto [potencia=" + potencia + ", modelo=" + modelo + ", placa=" + placa + ", capacidadePessoas="
+				+ capacidadePessoas + ", valorBaseLocacao=" + valorBaseLocacao + ", ano=" + ano + ", porteVeiculo="
+				+ porteVeiculo + "]";
 	}
 
 }
